@@ -50,6 +50,7 @@ class HeaderView extends Component {
 
 class FooterTabs extends Component {
     render() {
+        console.log(this.props)
         return (
             <View style={{ flex: .1, backgroundColor: 'blue', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
                 <View>
@@ -68,7 +69,13 @@ class FooterTabs extends Component {
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('UserMenu')}>
+                    <TouchableOpacity onPress={() => {
+                        if (this.props.navigation.state.index === 0) {
+                            this.props.navigation.navigate('DrawerOpen');
+                        } else {
+                            this.props.navigation.navigate('DrawerClose');
+                        }
+                    }}>
                         <Image source={require('./../images/user.png')} />
                     </TouchableOpacity>
                 </View>
@@ -78,51 +85,14 @@ class FooterTabs extends Component {
     };
 }
 
-
 const Tab = TabNavigator(
     {
         Welcome: { screen: Welcome },
-        Home: {
-            screen: Home,
-            navigationOptions: {
-                tabBarIcon: ({ tintColor }) => (
-                    <Image source={require('./../images/home.png')}
-                        style={[styles.icon, { tintColor: tintColor }]}
-                    />
-                ),
-            }
-        },
-        Email: {
-            screen: Email,
-            navigationOptions: {
-                tabBarIcon: ({ tintColor }) => (
-                    <Image source={require('./../images/email.png')}
-                        style={[styles.icon, { tintColor: tintColor }]}
-                    />
-                ),
-            }
-        },
-        History: {
-            screen: History,
-            navigationOptions: {
-                tabBarIcon: ({ tintColor }) => (
-                    <Image source={require('./../images/history.png')}
-                        style={[styles.icon, { tintColor: tintColor }]}
-                    />
-                ),
-            }
-        },
-        UserMenu: {
-            screen: UserMenu,
-            navigationOptions: {
-                tabBarIcon: ({ tintColor }) => (
-                    <Image source={require('./../images/user.png')}
-                        style={[styles.icon, { tintColor: tintColor }]}
-                    />
-                ),
-            }
-        },
 
+        Home: { screen: Home },
+        Email: { screen: Email },
+        History: { screen: History },
+        UserMenu: { screen: UserMenu },
     }, {
         tabBarPosition: 'bottom',
         animationEnabled: true,
@@ -140,10 +110,28 @@ const Tab = TabNavigator(
     }
 );
 
+const Drawer = DrawerNavigator(
+    {
+        Tab: { screen: Tab },
+
+        Welcome: { screen: Welcome },
+        Home: { screen: Home },
+        Email: { screen: Email },
+        History: { screen: History },
+        UserMenu: { screen: UserMenu },
+    },
+    {
+        drawerOpenRoute: 'DrawerOpen',
+        drawerCloseRoute: 'DrawerClose',
+        drawerToggleRoute: 'DrawerToggle',
+        drawerPosition: 'right',
+
+    }
+);
 
 const Navigator = StackNavigator(
     {
-        Tab: { screen: Tab },
+        Drawer: { screen: Drawer },
     },
     {
         headerMode: 'float',
@@ -155,10 +143,3 @@ const Navigator = StackNavigator(
 );
 
 export default Navigator;
-
-const styles = StyleSheet.create({
-    icon: {
-        width: 26,
-        height: 26,
-    },
-});
